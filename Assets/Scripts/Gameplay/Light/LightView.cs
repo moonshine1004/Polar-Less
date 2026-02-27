@@ -1,7 +1,7 @@
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
-using GamePlay.Light.UseCase;
-using GamePlay.Light.Domain;
-using UnityEngine.InputSystem.iOS;
 
 public struct LightDrawData
 {
@@ -19,13 +19,15 @@ public class LightView : MonoBehaviour
 
     private LightDomain _lightDomain;
     private LightStartUseCase _lightStartUseCase;
-    private LightReflectUseCase _lightReflectUseCase = new LightReflectUseCase();
+    private LightReflectUseCase _lightReflectUseCase;
 
+    // private event Action MirrorTouched;
 
-    public void InstallLightView(LightDomain lightDomain, LightStartUseCase lightStartUseCase)
+    public void InstallLightView(LightDomain lightDomain, LightServices lightServices)
     {
         _lightDomain = lightDomain;
-        _lightStartUseCase = lightStartUseCase;
+        _lightStartUseCase = lightServices.Get<LightStartUseCase>();
+        _lightReflectUseCase = lightServices.Get<LightReflectUseCase>();
     }
 
     #region Unity Lifecycle
@@ -37,62 +39,50 @@ public class LightView : MonoBehaviour
     private void Start()
     {
         DrawLightPath(_lightStartUseCase.Excute(this, _lightDomain));
+        //StartCoroutine(OnStartDraw());
     }
     private void Update()
     {
-        //ReflectLaser(transform.position, transform.up);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, _lightDomain.MaxDistance, _layerMask);
-        if (hit.collider != null)
-        {
-            DrawLightPath(_lightReflectUseCase.Excute(this, _lightDomain, hit.point, hit.normal));
-        }
+        DrawLine(transform.position, Vector3.up);
     }
     #endregion  
-    private void ReflectLaser(Vector2 origin, Vector2 direction)
+    private void DrawLine(Vector3 origin, Vector3 direction)
     {
-        _lineRenderer.positionCount = 1;
-        _lineRenderer.SetPosition(0, origin);
-
-        int reflections = 0;
-        Vector2 currentPosition = origin;
-        Vector2 currentDirection = direction;
-
-        while (reflections < _lightDomain.MaxReflections)
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, _lightDomain.MaxDistance, _layerMask);
+        if (hit.collider != null)
         {
-            RaycastHit2D hit = Physics2D.Raycast(currentPosition, currentDirection, _lightDomain.MaxDistance, _layerMask);
+            var data = _lightReflectUseCase.Excute(this, _lightDomain, hit.point, hit.normal);
+            DrawLightPath(data);
+            DrawLine(data.Origin, data.Direction);
+        }
+    }
+    
+    private IEnumerator OnStartDraw()
+    {
+        bool hitMirror = true;
+        while (hitMirror)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, _lightDomain.MaxDistance, _layerMask);
             if (hit.collider != null)
             {
-                reflections++;
-                _lineRenderer.positionCount += 1;
-                _lineRenderer.SetPosition(reflections, hit.point);
-
-                // 반사 방향 계산
-                currentDirection = Vector2.Reflect(currentDirection, hit.normal);
-                currentPosition = hit.point;
-
-                // 목표 지점에 도달 시 체크 (Layer로 Goal 처리 가능)
-                if (hit.collider.CompareTag("Goal"))
+                var data = _lightReflectUseCase.Excute(this, _lightDomain, hit.point, hit.normal);
+                DrawLightPath(data);
+                RaycastHit2D mirrorHit = Physics2D.Raycast(data.Origin, data.Direction, data.MaxDistance, _layerMask);
+                if (mirrorHit.collider != null)
                 {
-                    Debug.Log("Goal Reached!");
-                    break;
+                    var data2 = _lightReflectUseCase.Excute(this, _lightDomain, mirrorHit.point, mirrorHit.normal);
+                    DrawLightPath(data2);
                 }
+                hitMirror = false;
+                yield return null;
             }
-            else
-            {
-                // 더 이상 충돌 없음 → 끝까지 직선
-                _lineRenderer.positionCount += 1;
-                _lineRenderer.SetPosition(reflections + 1, currentPosition + currentDirection * _lightDomain.MaxDistance);
-                break;
-            }
+            yield return null;  
         }
-    } 
+    }
 
     private void DrawLightPath(LightDrawData lightDrawData)
     {
         _lineRenderer.SetPosition(lightDrawData.Index, lightDrawData.Origin);
         _lineRenderer.SetPosition(lightDrawData.Index + 1, lightDrawData.Origin + lightDrawData.Direction.normalized * lightDrawData.MaxDistance);
     }
-
-
-    
 }

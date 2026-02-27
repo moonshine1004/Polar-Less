@@ -1,23 +1,17 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public enum MirrorType
-{
-    Rotate,
-    Move,
-    Static
-}
+
 
 public abstract class MirrorBaseView : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
-    protected LayerMask _layerMask = 1 << 6;
     private Collider2D _collider;
-    [SerializeField] protected int _mirrorID;
-    [SerializeField] protected MirrorType _mirrorType;
-    [SerializeField] protected bool _isCotrolling = false;
+    protected MirrorDomain _mirrorDomain;
 
-    public int MirrorID{ get => _mirrorID; set => _mirrorID = value; }
-
+    public void InstallMirror(MirrorDomain mirrorDomain)
+    {
+        _mirrorDomain = mirrorDomain;
+    }
 
     #region Unity Lifecycle
     private void Awake()

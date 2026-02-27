@@ -9,19 +9,20 @@ public sealed class RotateMirrorView : MirrorBaseView
     private void Awake()
     {
         gameObject.layer = 6;
-        _mirrorType = MirrorType.Rotate;
+        _mirrorDomain = new MirrorDomain();
+        _mirrorDomain.MirrorType = MirrorType.Rotate;
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
         // UI 표시
         // SwithControl();
-        _isCotrolling = true;
+        _mirrorDomain.IsControlling = true;
     }
 
     public override void OnDrag(PointerEventData eventData)
     {
-        if( !_isCotrolling) return;
+        if( !_mirrorDomain.IsControlling) return;
         Vector2 touchPosition = Camera.main.ScreenToWorldPoint(eventData.position);
         Vector2 mirrorPosition = transform.position;
 
@@ -47,7 +48,7 @@ public sealed class RotateMirrorView : MirrorBaseView
 
     public void SwithControl()
     {
-        _isCotrolling = !_isCotrolling;
+        _mirrorDomain.IsControlling = !_mirrorDomain.IsControlling;
     }
 
 }
