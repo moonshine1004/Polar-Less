@@ -1,33 +1,33 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-[ExecuteAlways]
-public class MirrorBaseView : MonoBehaviour
+public enum MirrorType
 {
-    [SerializeField] private LayerMask _layerMask = 1 << 6;
+    Rotate,
+    Move,
+    Static
+}
+
+public abstract class MirrorBaseView : MonoBehaviour, IPointerDownHandler, IDragHandler
+{
+    protected LayerMask _layerMask = 1 << 6;
     private Collider2D _collider;
-    private LineRenderer _lineRenderer;
+    [SerializeField] protected int _mirrorID;
+    [SerializeField] protected MirrorType _mirrorType;
+    [SerializeField] protected bool _isCotrolling = false;
+
+    public int MirrorID{ get => _mirrorID; set => _mirrorID = value; }
+
 
     #region Unity Lifecycle
     private void Awake()
     {
+        gameObject.layer = 6;
         _collider = GetComponent<Collider2D>();
     }
     #endregion
+    public abstract void OnPointerDown(PointerEventData eventData);
+    public abstract void OnDrag(PointerEventData eventData);
+    protected abstract void Move();
 
-    protected virtual void Move()
-    {
-        
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Collided with: " + collision.gameObject.name);
-        _lineRenderer = collision.gameObject.GetComponent<LineRenderer>();
-        _lineRenderer.positionCount++;
-        _lineRenderer.SetPosition(_lineRenderer.positionCount, transform.position + new Vector3(3, 3, 0));
-    }
-    private void Reflect()
-    {
-        
-    }
 }
