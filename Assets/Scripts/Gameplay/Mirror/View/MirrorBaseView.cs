@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public abstract class MirrorBaseView : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
-    private Collider2D _collider;
+    [SerializeField] protected Collider2D _collider;
     protected MirrorDomain _mirrorDomain;
 
     public void InstallMirror(MirrorDomain mirrorDomain)

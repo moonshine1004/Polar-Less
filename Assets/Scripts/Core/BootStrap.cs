@@ -41,7 +41,11 @@ public class BootStrap : MonoBehaviour
         #endregion
 
         #region Views
+        // lightView
         _lightView.InstallLightView(lightDomain, lightServices);
+        // mittotrView
+        var mirrorEventBus = new EventBus();
+        _mirrorPooling.Install(mirrorEventBus);
         #endregion
 
     }

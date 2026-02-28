@@ -6,7 +6,7 @@ public class LightDomain
     private List<Vector3> _lightPath = new List<Vector3>(); // 레이저의 경로를 저장하는 리스트
     private int _pathIndex = 0;
     private float _maxDistance = 30f; 
-    private int _maxReflections = 30;
+    private int _maxReflections = 18;
 
     public List<Vector3> LightPath
     {

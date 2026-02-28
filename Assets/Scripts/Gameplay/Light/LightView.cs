@@ -16,6 +16,7 @@ public class LightView : MonoBehaviour
     private LineRenderer _lineRenderer;
     public LineRenderer LineRenderer => _lineRenderer;
     private LayerMask _layerMask = 1 << 6;
+    private int _count = 0;
 
     private LightDomain _lightDomain;
     private LightStartUseCase _lightStartUseCase;
@@ -35,48 +36,30 @@ public class LightView : MonoBehaviour
     {
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.positionCount = 0;
+        _lineRenderer.startWidth = 0.2f;
+        _lineRenderer.endWidth = 0.2f;
     }
     private void Start()
     {
         DrawLightPath(_lightStartUseCase.Excute(this, _lightDomain));
-        //StartCoroutine(OnStartDraw());
     }
     private void Update()
     {
+        _count = 0;
+        DrawLightPath(_lightStartUseCase.Excute(this, _lightDomain));
         DrawLine(transform.position, Vector3.up);
     }
     #endregion  
     private void DrawLine(Vector3 origin, Vector3 direction)
     {
+        if(_count >= _lightDomain.MaxReflections) return;
+        _count++;
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, _lightDomain.MaxDistance, _layerMask);
         if (hit.collider != null)
         {
-            var data = _lightReflectUseCase.Excute(this, _lightDomain, hit.point, hit.normal);
+            var data = _lightReflectUseCase.Excute(this, _lightDomain,hit.point ,direction, hit.normal);
             DrawLightPath(data);
             DrawLine(data.Origin, data.Direction);
-        }
-    }
-    
-    private IEnumerator OnStartDraw()
-    {
-        bool hitMirror = true;
-        while (hitMirror)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, _lightDomain.MaxDistance, _layerMask);
-            if (hit.collider != null)
-            {
-                var data = _lightReflectUseCase.Excute(this, _lightDomain, hit.point, hit.normal);
-                DrawLightPath(data);
-                RaycastHit2D mirrorHit = Physics2D.Raycast(data.Origin, data.Direction, data.MaxDistance, _layerMask);
-                if (mirrorHit.collider != null)
-                {
-                    var data2 = _lightReflectUseCase.Excute(this, _lightDomain, mirrorHit.point, mirrorHit.normal);
-                    DrawLightPath(data2);
-                }
-                hitMirror = false;
-                yield return null;
-            }
-            yield return null;  
         }
     }
 

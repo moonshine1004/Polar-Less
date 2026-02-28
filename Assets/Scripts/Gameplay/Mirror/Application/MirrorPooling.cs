@@ -15,9 +15,16 @@ public class MirrorPooling : MonoBehaviour, IMirrorPool<MirrorBaseView>, IMirror
     private MirrorBaseView[] _baseMirrorPool;
     private RotateMirrorView[] _rotateMirrorPool;
 
+    private EventBus _mirrorViewEventBus;
+
     private MirrorInstallUseCase _mirrorInstallUseCase;
 
     private int _poolSize = 10;
+
+    public void Install(EventBus mirrorViewEventBus)
+    {
+        _mirrorViewEventBus = mirrorViewEventBus;
+    }
 
     #region Unity Lifecycle
     private void Awake()

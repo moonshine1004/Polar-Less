@@ -1,28 +1,37 @@
-using Microsoft.Unity.VisualStudio.Editor;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public sealed class RotateMirrorView : MirrorBaseView
 {
-    [SerializeField] private Image _pressedUI;
+    
+    private bool _isControlling = false;
+
+    private IEventBusSubscription _eventBusSubscription;
+    private IEventBusPublish _eventBusPublish;
 
     private void Awake()
     {
         gameObject.layer = 6;
-        _mirrorDomain = new MirrorDomain();
-        _mirrorDomain.MirrorType = MirrorType.Rotate;
+        _mirrorDomain = new MirrorDomain()
+        {
+            MirrorType = MirrorType.Rotate,
+            MirrorID = 1,
+        };
+        _collider = GetComponent<Collider2D>();
+
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
         // UI 표시
         // SwithControl();
-        _mirrorDomain.IsControlling = true;
+        _isControlling = true;
     }
 
     public override void OnDrag(PointerEventData eventData)
     {
-        if( !_mirrorDomain.IsControlling) return;
+        if( !_isControlling) return;
         Vector2 touchPosition = Camera.main.ScreenToWorldPoint(eventData.position);
         Vector2 mirrorPosition = transform.position;
 
@@ -48,7 +57,7 @@ public sealed class RotateMirrorView : MirrorBaseView
 
     public void SwithControl()
     {
-        _mirrorDomain.IsControlling = !_mirrorDomain.IsControlling;
+        _isControlling = !_isControlling;
     }
 
 }

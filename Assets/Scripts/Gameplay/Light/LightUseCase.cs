@@ -20,20 +20,20 @@ public class LightReflectUseCase
     /// </summary>
     /// <param name="lightView">positionCount를 받아옴</param>
     /// <param name="lightDomain">기본 정책</param>
-    /// <param name="hitPoint">맞은 곳</param>
-    /// <param name="hitNormal">입사각</param>
+    /// <param name="hitPoint">충돌 지점</param>
+    /// <param name="hitDirection">입사각</param>
+    /// <param name="hitNormal">법선</param>
     /// <returns></returns>
-    public LightDrawData Excute(LightView lightView, LightDomain lightDomain, Vector2 hitPoint, Vector2 hitNormal)
+    public LightDrawData Excute(LightView lightView, LightDomain lightDomain,Vector2 hitPoint ,Vector2 hitDirection, Vector2 hitNormal)
     {
         lightDomain.PathIndex++;
         lightView.LineRenderer.positionCount = lightDomain.PathIndex;
         
-
         return new LightDrawData
         {
             Index = lightDomain.PathIndex - 2,
-            Origin = hitPoint,
-            Direction = Vector2.Reflect(hitPoint, hitNormal),
+            Origin =  hitPoint + hitNormal * 0.001f,
+            Direction = Vector2.Reflect(hitDirection, hitNormal),
             MaxDistance = lightDomain.MaxDistance
         };
     }
