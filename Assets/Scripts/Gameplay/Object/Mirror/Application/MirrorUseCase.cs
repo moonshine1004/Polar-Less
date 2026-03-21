@@ -23,11 +23,3 @@ public class MirrorInstallUseCase // 풀에서 꺼낼 때
         return mirrorDomain;
     }
 }
-
-public class MirrorSetUseCase
-{
-    public void Excute(MirrorBaseView mirror, Vector3 position)
-    {
-        mirror.transform.position = position;
-    }
-}

@@ -23,9 +23,9 @@ public class BootStrap : MonoBehaviour
         var lightReflectUseCase = new LightReflectUseCase();
         // mirrorUseCase
         var mirrorInstallUseCase = new MirrorInstallUseCase();
-        var mirrorSetUseCase = new MirrorSetUseCase();
+
         // infraUseCase
-        IMirrorPool<MirrorBaseView> mirrorPooling = _mirrorPooling;
+
         var rotateMirrorPool = _mirrorPooling;
         #endregion
 
@@ -37,7 +37,7 @@ public class BootStrap : MonoBehaviour
         // mirrorServices
         mirrorServices = new MirrorServices();
         mirrorServices.Register(mirrorInstallUseCase);
-        mirrorServices.Register(mirrorSetUseCase);
+
         #endregion
 
         #region Views

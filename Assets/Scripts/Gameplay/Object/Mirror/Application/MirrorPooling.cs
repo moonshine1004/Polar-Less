@@ -8,11 +8,11 @@ public interface IMirrorPool<T>
     public void Return(T item);
 }
 
-public class MirrorPooling : MonoBehaviour, IMirrorPool<MirrorBaseView>, IMirrorPool<RotateMirrorView>
+public class MirrorPooling : MonoBehaviour, IMirrorPool<SlideMirrorView>, IMirrorPool<RotateMirrorView>
 {
-    [SerializeField] private MirrorBaseView _baseMirrorPrefab;
+    [SerializeField] private SlideMirrorView _baseMirrorPrefab;
     [SerializeField] private RotateMirrorView _rotateMirrorPrefab;
-    private MirrorBaseView[] _baseMirrorPool;
+    private SlideMirrorView[] _baseMirrorPool;
     private RotateMirrorView[] _rotateMirrorPool;
 
     private EventBus _mirrorViewEventBus;
@@ -29,7 +29,7 @@ public class MirrorPooling : MonoBehaviour, IMirrorPool<MirrorBaseView>, IMirror
     #region Unity Lifecycle
     private void Awake()
     {
-        _baseMirrorPool = new MirrorBaseView[_poolSize];
+        _baseMirrorPool = new SlideMirrorView[_poolSize];
         _rotateMirrorPool = new RotateMirrorView[_poolSize];
 
         for (int i = 0; i < _poolSize; i++)
@@ -45,13 +45,12 @@ public class MirrorPooling : MonoBehaviour, IMirrorPool<MirrorBaseView>, IMirror
     }
     #endregion
 
-    MirrorBaseView IMirrorPool<MirrorBaseView>.Get()
+    SlideMirrorView IMirrorPool<SlideMirrorView>.Get()
     {
         for (int i = 0; i < _poolSize; i++)
         {
             if (!_baseMirrorPool[i].gameObject.activeInHierarchy)
             {
-                _baseMirrorPool[i].InstallMirror(_mirrorInstallUseCase.Excute());
                 _baseMirrorPool[i].gameObject.SetActive(true);
                 return _baseMirrorPool[i];
             }
@@ -59,7 +58,7 @@ public class MirrorPooling : MonoBehaviour, IMirrorPool<MirrorBaseView>, IMirror
         return null; 
     }
 
-    public void Return(MirrorBaseView item)
+    public void Return(SlideMirrorView item)
     {
         item.gameObject.SetActive(false);
     }
@@ -70,7 +69,6 @@ public class MirrorPooling : MonoBehaviour, IMirrorPool<MirrorBaseView>, IMirror
         {
             if (!_rotateMirrorPool[i].gameObject.activeInHierarchy)
             {
-                _rotateMirrorPool[i].InstallMirror(_mirrorInstallUseCase.Excute());
                 _rotateMirrorPool[i].gameObject.SetActive(true);
                 return _rotateMirrorPool[i];
             }

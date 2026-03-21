@@ -55,7 +55,11 @@ public class LightView : MonoBehaviour
         if(_count >= _lightDomain.MaxReflections) return;
         _count++;
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, _lightDomain.MaxDistance, _layerMask);
-        if (hit.collider != null)
+        if(hit.collider.GetComponent<ObstacleView>() != null)
+        {
+            return;
+        }
+        else if (hit.collider != null)
         {
             var data = _lightReflectUseCase.Excute(this, _lightDomain,hit.point ,direction, hit.normal);
             DrawLightPath(data);
