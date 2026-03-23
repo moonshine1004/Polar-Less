@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca65b7f5492b4090be3eca0c52525b4, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: Assembly-CSharp::MirrorSpriteCatalogSO
-  RotateMirrorSprite: {fileID: 0}
-  SlideMirrorSprite: {fileID: 0}
+  RotateMirrorSprite: {fileID: -487690659708163878, guid: a531d9b9adc8d4512a4c3d2e3939b883, type: 3}
+  SlideMirrorSprite: {fileID: 438769453518626156, guid: 37e4273c92b2c4effb34648afd3a88e1, type: 3}

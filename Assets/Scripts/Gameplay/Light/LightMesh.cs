@@ -30,50 +30,42 @@ public class LightMesh : MonoBehaviour
     {
         ClearPath();
 
-        for (int i = 0; i < pathPoints.Count; i++)
-        {
-            Vector2 normal;
+        if (pathPoints == null || pathPoints.Count < 2)
+            return;
 
-            if (i == 0)
-            {
-                Vector2 dir = (pathPoints[1] - pathPoints[0]).normalized;
-                normal = GetNormal(dir);
-            }
-            else if (i == pathPoints.Count - 1)
-            {
-                Vector2 dir = (pathPoints[i] - pathPoints[i - 1]).normalized;
-                normal = GetNormal(dir);
-            }
-            else
-            {
-                Vector2 dirPrev = (pathPoints[i] - pathPoints[i - 1]).normalized;
-                Vector2 dirNext = (pathPoints[i + 1] - pathPoints[i]).normalized;
-
-                Vector2 normalPrev = GetNormal(dirPrev);
-                Vector2 normalNext = GetNormal(dirNext);
-
-                normal = (normalPrev + normalNext).normalized;
-
-                float dot = Vector2.Dot(normal, normalNext);
-                if (Mathf.Abs(dot) > 0.0001f)
-                {
-                    normal *= 1f / dot;
-                }
-            }
-
-            Vector3 offset = (Vector3)(normal * _width * 0.5f);
-
-            _vertices.Add(pathPoints[i] + offset);
-            _vertices.Add(pathPoints[i] - offset);
-
-            float u = (float)i / (pathPoints.Count - 1);
-            _uvs.Add(new Vector2(u, 1f));
-            _uvs.Add(new Vector2(u, 0f));
-        }
+        float halfWidth = _width * 0.5f;
 
         for (int i = 0; i < pathPoints.Count - 1; i++)
         {
-            int index = i * 2;
+            Vector3 start = transform.InverseTransformPoint(pathPoints[i]);
+            Vector3 end = transform.InverseTransformPoint(pathPoints[i + 1]);
+
+            Vector2 dir = end - start;
+            float len = dir.magnitude;
+
+            if (len < 0.0001f)
+                continue;
+
+            dir /= len;
+
+            Vector2 normal = new Vector2(-dir.y, dir.x) * halfWidth;
+
+            Vector3 v0 = start + (Vector3)normal;
+            Vector3 v1 = start - (Vector3)normal;
+            Vector3 v2 = end + (Vector3)normal;
+            Vector3 v3 = end - (Vector3)normal;
+
+            int index = _vertices.Count;
+
+            _vertices.Add(v0);
+            _vertices.Add(v1);
+            _vertices.Add(v2);
+            _vertices.Add(v3);
+
+            _uvs.Add(new Vector2(0f, 1f));
+            _uvs.Add(new Vector2(0f, 0f));
+            _uvs.Add(new Vector2(1f, 1f));
+            _uvs.Add(new Vector2(1f, 0f));
 
             _triangles.Add(index + 0);
             _triangles.Add(index + 2);
@@ -83,6 +75,9 @@ public class LightMesh : MonoBehaviour
             _triangles.Add(index + 3);
             _triangles.Add(index + 1);
         }
+
+        if (_vertices.Count == 0)
+            return;
 
         _mesh.SetVertices(_vertices);
         _mesh.SetUVs(0, _uvs);
@@ -96,10 +91,5 @@ public class LightMesh : MonoBehaviour
         _vertices.Clear();
         _triangles.Clear();
         _uvs.Clear();
-    }
-
-    private Vector2 GetNormal(Vector2 dir)
-    {
-        return new Vector2(-dir.y, dir.x);
     }
 }

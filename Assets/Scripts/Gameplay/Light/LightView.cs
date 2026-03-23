@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public struct LightDrawData
@@ -11,13 +8,12 @@ public struct LightDrawData
     public float MaxDistance;
 }
 
-
 public class LightView : MonoBehaviour
 {
     private LayerMask _layerMask = 1 << 6;
-    private int _count = 0;
 
     [SerializeField] private LightMesh _lightMesh;
+
     private LightDomain _lightDomain;
     private LightStartUseCase _lightStartUseCase;
     private LightReflectUseCase _lightReflectUseCase;
@@ -29,32 +25,29 @@ public class LightView : MonoBehaviour
         _lightReflectUseCase = lightServices.Get<LightReflectUseCase>();
     }
 
-    #region Unity Lifecycle
-
-    private void Start()
-    {
-        
-    }
     private void Update()
     {
-        CheckReflact(transform.position, Vector2.up);
+        _lightDomain.LightPath.Clear();
+        _lightDomain.LightPath.Add(transform.position);
+
+        CheckReflect(transform.position, Vector2.up);
+
         _lightMesh.DrawLine(_lightDomain.LightPath);
     }
-    #endregion  
-    private void CheckReflact(Vector3 origin, Vector3 direction)
-    {
-        _lightDomain.LightPath.Add(origin);
 
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, _lightDomain.MaxDistance, _layerMask);
+    private void CheckReflect(Vector3 origin, Vector3 direction)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, _lightDomain.MaxDistance, _layerMask);
+
         if (hit.collider != null)
         {
             _lightDomain.LightPath.Add(hit.point);
-            CheckReflact(hit.point + hit.normal * 0.1f, Vector2.Reflect(direction, hit.normal));
+
+            CheckReflect(hit.point + hit.normal * 0.001f, Vector2.Reflect(direction.normalized, hit.normal).normalized);
         }
         else
         {
-            _lightDomain.LightPath.Add(origin + direction * _lightDomain.MaxDistance);
+            _lightDomain.LightPath.Add(origin + direction.normalized * _lightDomain.MaxDistance);
         }
     }
-
 }
