@@ -26,8 +26,7 @@ public class LightReflectUseCase
     /// <returns></returns>
     public LightDrawData Excute(LightView lightView, LightDomain lightDomain,Vector2 hitPoint ,Vector2 hitDirection, Vector2 hitNormal)
     {
-        lightDomain.PathIndex++;
-        lightView.LineRenderer.positionCount = lightDomain.PathIndex;
+        lightDomain.LightPath.Add(hitPoint);
         
         return new LightDrawData
         {
@@ -43,9 +42,6 @@ public class LightStartUseCase
 {
     public LightDrawData Excute(LightView lightView, LightDomain lightDomain)
     {
-        lightDomain.PathIndex = 2;
-        lightView.LineRenderer.positionCount = lightDomain.PathIndex;
-
         lightDomain.LightPath.Add(lightView.transform.position);
         lightDomain.LightPath.Add(lightView.transform.position + Vector3.up * lightDomain.MaxDistance);
 

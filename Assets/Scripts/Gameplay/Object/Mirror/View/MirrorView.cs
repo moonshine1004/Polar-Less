@@ -1,26 +1,46 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 
-
+[RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class MirrorView : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
-    private MirrorDomain _mirrorDomain = new MirrorDomain();
-    [SerializeField] private MirrorType _mirrorType;
+    private SpriteRenderer _spriteRenderer;
+    private BoxCollider2D _boxCollider2D;
+    private MirrorDomain _mirrorDomain;
     private IMirrorMoveStrategy _moveStrategy;
 
-    private void Awake()
+    public void Install(MirrorDomain mirrorDomain, IMirrorMoveStrategy moveStrategy, Sprite sprite)
     {
-        switch (_mirrorType)
-        {
-            case MirrorType.Rotate:
-                _moveStrategy = new RotateMirrorMoveStrategy();
-                break;
-            case MirrorType.Move:
-                _moveStrategy = new SlideMirrorMoveStrategy();
-                break;
-        }
+        _mirrorDomain = mirrorDomain;
+        _moveStrategy = moveStrategy;
+        _spriteRenderer.sprite = sprite;
+
+        transform.position = mirrorDomain.Position;
+        transform.rotation = mirrorDomain.Rotation;
+
+        Vector2 spriteSize = _spriteRenderer.sprite.bounds.size;
+        _boxCollider2D.size = spriteSize;
+
+        gameObject.SetActive(true);
     }
+
+    #region Unity Lifecycle
+    public void Awake()
+    {
+        gameObject.layer = 6;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+    }
+    public void OnDisable()
+    {
+        _mirrorDomain = null;
+        _moveStrategy = null;
+        _spriteRenderer.sprite = null;
+        gameObject.SetActive(false);
+    }
+    #endregion
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -28,7 +48,6 @@ public class MirrorView : MonoBehaviour, IPointerDownHandler, IDragHandler
 
         _moveStrategy.Move(transform, touchPosition);
     }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         

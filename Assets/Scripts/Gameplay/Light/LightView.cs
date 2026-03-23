@@ -11,18 +11,16 @@ public struct LightDrawData
     public float MaxDistance;
 }
 
+
 public class LightView : MonoBehaviour
 {
-    private LineRenderer _lineRenderer;
-    public LineRenderer LineRenderer => _lineRenderer;
     private LayerMask _layerMask = 1 << 6;
     private int _count = 0;
 
+    [SerializeField] private LightMesh _lightMesh;
     private LightDomain _lightDomain;
     private LightStartUseCase _lightStartUseCase;
     private LightReflectUseCase _lightReflectUseCase;
-
-    // private event Action MirrorTouched;
 
     public void InstallLightView(LightDomain lightDomain, LightServices lightServices)
     {
@@ -32,44 +30,31 @@ public class LightView : MonoBehaviour
     }
 
     #region Unity Lifecycle
-    private void Awake()
-    {
-        _lineRenderer = GetComponent<LineRenderer>();
-        _lineRenderer.positionCount = 0;
-        _lineRenderer.startWidth = 0.2f;
-        _lineRenderer.endWidth = 0.2f;
-    }
+
     private void Start()
     {
-        DrawLightPath(_lightStartUseCase.Excute(this, _lightDomain));
+        
     }
     private void Update()
     {
-        _count = 0;
-        DrawLightPath(_lightStartUseCase.Excute(this, _lightDomain));
-        DrawLine(transform.position, Vector3.up);
+        CheckReflact(transform.position, Vector2.up);
+        _lightMesh.DrawLine(_lightDomain.LightPath);
     }
     #endregion  
-    private void DrawLine(Vector3 origin, Vector3 direction)
+    private void CheckReflact(Vector3 origin, Vector3 direction)
     {
-        if(_count >= _lightDomain.MaxReflections) return;
-        _count++;
+        _lightDomain.LightPath.Add(origin);
+
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, _lightDomain.MaxDistance, _layerMask);
-        if(hit.collider.GetComponent<ObstacleView>() != null)
+        if (hit.collider != null)
         {
-            return;
+            _lightDomain.LightPath.Add(hit.point);
+            CheckReflact(hit.point + hit.normal * 0.1f, Vector2.Reflect(direction, hit.normal));
         }
-        else if (hit.collider != null)
+        else
         {
-            var data = _lightReflectUseCase.Excute(this, _lightDomain,hit.point ,direction, hit.normal);
-            DrawLightPath(data);
-            DrawLine(data.Origin, data.Direction);
+            _lightDomain.LightPath.Add(origin + direction * _lightDomain.MaxDistance);
         }
     }
 
-    private void DrawLightPath(LightDrawData lightDrawData)
-    {
-        _lineRenderer.SetPosition(lightDrawData.Index, lightDrawData.Origin);
-        _lineRenderer.SetPosition(lightDrawData.Index + 1, lightDrawData.Origin + lightDrawData.Direction.normalized * lightDrawData.MaxDistance);
-    }
 }

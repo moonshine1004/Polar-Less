@@ -3,49 +3,52 @@ using UnityEngine;
 public class BootStrap : MonoBehaviour
 {
     [SerializeField] private LightView _lightView;
-    [SerializeField] private MirrorPooling _mirrorPooling;
+    [SerializeField] private MirrorView _mirrorPrefab;
+    [SerializeField] private MirrorSpriteCatalogSO _mirrorSpriteCatalog;
     
     public LightServices lightServices { get; private set; }
-    public MirrorServices mirrorServices { get; private set; }
 
     private void Awake()
     {
-        // Infra
-        
+        #region Infra
+            var mirrorPool = new MirrorPooling(_mirrorPrefab);
+        #endregion
         
         #region Domains
         var lightDomain = new LightDomain();
         #endregion
 
         #region UseCases
-        // lightUseCase
-        var lightStartUseCase = new LightStartUseCase();
-        var lightReflectUseCase = new LightReflectUseCase();
-        // mirrorUseCase
-        var mirrorInstallUseCase = new MirrorInstallUseCase();
+            // lightUseCase
+            var lightStartUseCase = new LightStartUseCase();
+            var lightReflectUseCase = new LightReflectUseCase();
+            // mirrorUseCase
+            var mirrorFactory = new MirrorFactory(mirrorPool, _mirrorSpriteCatalog);
+            // infraUseCase
 
-        // infraUseCase
-
-        var rotateMirrorPool = _mirrorPooling;
         #endregion
 
         #region Services
-        // lightServices
-        lightServices = new LightServices();
-        lightServices.Register(lightStartUseCase);
-        lightServices.Register(lightReflectUseCase);
-        // mirrorServices
-        mirrorServices = new MirrorServices();
-        mirrorServices.Register(mirrorInstallUseCase);
+            // lightServices
+            lightServices = new LightServices();
+            lightServices.Register(lightStartUseCase);
+            lightServices.Register(lightReflectUseCase);
+            // mirrorServices
+
 
         #endregion
 
         #region Views
-        // lightView
-        _lightView.InstallLightView(lightDomain, lightServices);
-        // mittotrView
-        var mirrorEventBus = new EventBus();
-        _mirrorPooling.Install(mirrorEventBus);
+            // lightView
+            _lightView.InstallLightView(lightDomain, lightServices);
+            // mittotrView
+            var mirrorEventBus = new EventBus();
+
+        #endregion
+
+        #region TestCase
+            var mirrorTestCase = FindObjectOfType<MirrorTestCase>();
+            mirrorTestCase.Install(mirrorFactory);
         #endregion
 
     }
