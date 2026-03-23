@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
-public class MirrorView : MonoBehaviour, IPointerDownHandler, IDragHandler
+public class MirrorView : MonoBehaviour, IPointerDownHandler, IDragHandler, IGetObjectType
 {
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _boxCollider2D;
@@ -51,5 +51,10 @@ public class MirrorView : MonoBehaviour, IPointerDownHandler, IDragHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         
+    }
+
+    public ObjectType GetObjectType()
+    {
+        return _mirrorDomain.MirrorType;
     }
 }

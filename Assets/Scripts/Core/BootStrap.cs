@@ -20,8 +20,7 @@ public class BootStrap : MonoBehaviour
 
         #region UseCases
             // lightUseCase
-            var lightStartUseCase = new LightStartUseCase();
-            var lightReflectUseCase = new LightReflectUseCase();
+
             // mirrorUseCase
             var mirrorFactory = new MirrorFactory(mirrorPool, _mirrorSpriteCatalog);
             // infraUseCase
@@ -31,8 +30,7 @@ public class BootStrap : MonoBehaviour
         #region Services
             // lightServices
             lightServices = new LightServices();
-            lightServices.Register(lightStartUseCase);
-            lightServices.Register(lightReflectUseCase);
+
             // mirrorServices
 
 

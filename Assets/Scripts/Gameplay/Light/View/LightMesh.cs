@@ -74,6 +74,31 @@ public class LightMesh : MonoBehaviour
             _triangles.Add(index + 2);
             _triangles.Add(index + 3);
             _triangles.Add(index + 1);
+
+            if (i < pathPoints.Count - 2)
+            {
+                Vector3 next = pathPoints[i + 2];
+
+                Vector2 nextDir = (next - end).normalized;
+                Vector2 nextNormal = new Vector2(-nextDir.y, nextDir.x) * halfWidth;
+
+                Vector3 joinA = end + (Vector3)normal;
+                Vector3 joinB = end + (Vector3)nextNormal;
+
+                int joinIndex = _vertices.Count;
+
+                _vertices.Add(end);
+                _vertices.Add(joinA);
+                _vertices.Add(joinB);
+
+                _uvs.Add(new Vector2(0.5f, 0.5f));
+                _uvs.Add(new Vector2(0f, 1f));
+                _uvs.Add(new Vector2(1f, 1f));
+
+                _triangles.Add(joinIndex + 0);
+                _triangles.Add(joinIndex + 1);
+                _triangles.Add(joinIndex + 2);
+            }
         }
 
         if (_vertices.Count == 0)
