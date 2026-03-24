@@ -422,7 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MirrorTestCase
   _position: {x: 0, y: 0, z: 0}
-  _rotation: {x: 0, y: 0, z: 0, w: 0}
+  _rotation: {x: 0, y: 0, z: 0.6427876, w: 0.76604444}
 --- !u!4 &1965327510
 Transform:
   m_ObjectHideFlags: 0

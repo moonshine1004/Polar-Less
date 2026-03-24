@@ -27,7 +27,7 @@ public class LightView : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, _lightDomain.MaxDistance, _layerMask);
         var objectType = hit.collider?.GetComponent<IGetObjectType>()?.GetObjectType();
-        if (objectType is ObjectType.Rotate or ObjectType.Move or ObjectType.Static)
+        if (objectType is ObjectType.Rotate or ObjectType.Slide or ObjectType.Static)
         {
             _lightDomain.LightPath.Add(hit.point);
 

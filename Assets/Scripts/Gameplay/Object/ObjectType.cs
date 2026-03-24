@@ -1,7 +1,7 @@
 public enum ObjectType
 {
     Rotate,
-    Move,
+    Slide,
     Static,
     Obstacle,
     Goal

@@ -5,5 +5,12 @@ using UnityEngine;
 public class GameStageDataSO : ScriptableObject
 {
     public int stageID;
-    public List<Vector3> mirrorPositions;
+    public int levelID;
+    public List<Vector3> mirrorData;
+}
+
+
+public class GameStageCatalogSO : ScriptableObject
+{
+    public List<GameStageDataSO> gameStageDataList;
 }

@@ -4,7 +4,7 @@ public class BootStrap : MonoBehaviour
 {
     [SerializeField] private LightView _lightView;
     [SerializeField] private MirrorView _mirrorPrefab;
-    [SerializeField] private MirrorSpriteCatalogSO _mirrorSpriteCatalog;
+    [SerializeField] private ObjectSpriteCatalogSO _mirrorSpriteCatalog;
     
     public LightServices lightServices { get; private set; }
 
@@ -22,7 +22,7 @@ public class BootStrap : MonoBehaviour
             // lightUseCase
 
             // mirrorUseCase
-            var mirrorFactory = new MirrorFactory(mirrorPool, _mirrorSpriteCatalog);
+            var mirrorFactory = new ObjectFactory(mirrorPool, _mirrorSpriteCatalog);
             // infraUseCase
 
         #endregion
