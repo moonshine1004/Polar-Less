@@ -46,7 +46,7 @@ public class ObjectFactory
         MirrorView mirrorView = _mirrorPool.Get();
         // 데이터 생성
         MirrorDomain mirrorDomain = new MirrorDomain();
-        mirrorDomain.Init(mirrorData.ID, mirrorData.Position, mirrorData.Rotation);
+        mirrorDomain.Init(mirrorData.ID, mirrorData.position, mirrorData.rotation);
 
         // MirrorView에 데이터와 전략 주입
         mirrorView.Install(mirrorDomain, _rotateMoveStrategy, _mirrorSpriteCatalog.RotateMirrorSprite);
@@ -56,7 +56,7 @@ public class ObjectFactory
         MirrorView mirrorView = _mirrorPool.Get();
 
         MirrorDomain mirrorDomain = new MirrorDomain();
-        mirrorDomain.Init(mirrorData.ID, mirrorData.Position, mirrorData.Rotation);
+        mirrorDomain.Init(mirrorData.ID, mirrorData.position, mirrorData.rotation);
 
         mirrorView.Install(mirrorDomain, _slideMoveStrategy, _mirrorSpriteCatalog.SlideMirrorSprite);
     }

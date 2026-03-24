@@ -24,8 +24,8 @@ public class MirrorTestCase : MonoBehaviour
         {
             objectType = ObjectType.Rotate,
             ID = ID,
-            Position = _position,
-            Rotation = _rotation
+            position = _position,
+            rotation = _rotation
         });
     }
 
@@ -36,8 +36,8 @@ public class MirrorTestCase : MonoBehaviour
         {
             objectType = ObjectType.Slide,
             ID = ID,
-            Position = _position,
-            Rotation = _rotation
+            position = _position,
+            rotation = _rotation
         });
     }
 

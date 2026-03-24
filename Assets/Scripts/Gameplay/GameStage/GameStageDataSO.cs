@@ -6,7 +6,7 @@ public class GameStageDataSO : ScriptableObject
 {
     public int stageID;
     public int levelID;
-    public List<Vector3> mirrorData;
+    public List<ObjectData> objectData = new();
 }
 
 
