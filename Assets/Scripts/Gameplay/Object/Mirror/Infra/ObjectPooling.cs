@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public interface IMirrorPool<T>
+public interface IObjectPool<T>
 {
     public T Get();
     public void Return(T item);
 }
 
-public class MirrorPooling :  IMirrorPool<MirrorView>
+public class ObjectPooling :  IObjectPool<MirrorView>
 {
-    public MirrorPooling(MirrorView mirrorPrefab)
+    public ObjectPooling(MirrorView mirrorPrefab)
     {
         _mirrorPrefab = mirrorPrefab;
         _mirrorPool = new MirrorView[_poolSize];
@@ -23,9 +23,7 @@ public class MirrorPooling :  IMirrorPool<MirrorView>
     private MirrorView _mirrorPrefab;
     private int _poolSize = 30;
 
-
-
-    MirrorView IMirrorPool<MirrorView>.Get()
+    MirrorView IObjectPool<MirrorView>.Get()
     {
         for (int i = 0; i < _poolSize; i++)
         {
@@ -34,12 +32,10 @@ public class MirrorPooling :  IMirrorPool<MirrorView>
                 _mirrorPool[i].gameObject.SetActive(true);
                 return _mirrorPool[i];
             }
-            else
-            {
-                return Object.Instantiate(_mirrorPrefab);
-            }
         }
-        return null; 
+
+        MirrorView newMirror = Object.Instantiate(_mirrorPrefab);
+        return newMirror;
     }
 
     public void Return(MirrorView item)

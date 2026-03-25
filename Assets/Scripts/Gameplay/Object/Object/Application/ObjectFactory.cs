@@ -5,16 +5,18 @@ using UnityEngine;
 /// </summary>
 public class ObjectFactory
 {
-    public ObjectFactory(IMirrorPool<MirrorView> mirrorPooling, ObjectSpriteCatalogSO mirrorSpriteCatalog)
+    public ObjectFactory(IObjectPool<MirrorView> mirrorPooling, ObjectSpriteCatalogSO objectSpriteCatalog, IRegistMirror mirrorRegistry)
     {
         _mirrorPool = mirrorPooling;
-        _mirrorSpriteCatalog = mirrorSpriteCatalog;
+        _objectSpriteCatalog = objectSpriteCatalog;
+        _mirrorRegistry = mirrorRegistry;
     }
     
     private readonly IMirrorMoveStrategy _rotateMoveStrategy = new RotateMirrorMoveStrategy();
     private readonly IMirrorMoveStrategy _slideMoveStrategy = new SlideMirrorMoveStrategy();
-    private readonly IMirrorPool<MirrorView> _mirrorPool;
-    private readonly ObjectSpriteCatalogSO _mirrorSpriteCatalog;
+    private readonly IObjectPool<MirrorView> _mirrorPool;
+    private readonly IRegistMirror _mirrorRegistry;
+    private readonly ObjectSpriteCatalogSO _objectSpriteCatalog;
     
     /// <summary>
     /// MirrorView를 풀에서 가져와서, MirrorDomain과 MoveStrategy를 주입하여 초기화한 후 반환하는 역할
@@ -49,7 +51,9 @@ public class ObjectFactory
         mirrorDomain.Init(mirrorData.ID, mirrorData.position, mirrorData.rotation);
 
         // MirrorView에 데이터와 전략 주입
-        mirrorView.Install(mirrorDomain, _rotateMoveStrategy, _mirrorSpriteCatalog.RotateMirrorSprite);
+        mirrorView.Install(mirrorDomain, _rotateMoveStrategy, _objectSpriteCatalog.RotateMirrorSprite);
+
+        _mirrorRegistry.RegisterMirror(mirrorView);
     }
     public void CreateSlideMirror(ObjectData mirrorData)
     {
@@ -58,6 +62,8 @@ public class ObjectFactory
         MirrorDomain mirrorDomain = new MirrorDomain();
         mirrorDomain.Init(mirrorData.ID, mirrorData.position, mirrorData.rotation);
 
-        mirrorView.Install(mirrorDomain, _slideMoveStrategy, _mirrorSpriteCatalog.SlideMirrorSprite);
+        mirrorView.Install(mirrorDomain, _slideMoveStrategy, _objectSpriteCatalog.SlideMirrorSprite);
+
+        _mirrorRegistry.RegisterMirror(mirrorView);
     }
 }

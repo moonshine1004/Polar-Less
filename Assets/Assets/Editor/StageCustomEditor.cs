@@ -28,13 +28,13 @@ public class StageCustomEditor : Editor
         _objectDataProp = serializedObject.FindProperty("objectData");
 
         // SceneView.duringSceneGui: 씬 뷰가 그려질 때마다 실행
-        SceneView.duringSceneGui += OnSceneGUI;
+        SceneView.duringSceneGui += OnScene;
         // 프리뷰 오브젝트를 다시 그림(=저장용)
         RebuildPreviewObjects();
     }
     private void OnDisable() // 종료 세팅
     {
-        SceneView.duringSceneGui -= OnSceneGUI;
+        SceneView.duringSceneGui -= OnScene;
         // 프리뷰 오브젝트 제거
         ClearPreviewObjects();
     }
@@ -291,7 +291,7 @@ public class StageCustomEditor : Editor
     /// <summary>
     /// 선택된 오브젝트 이동, 회전
     /// </summary>
-    private void OnSceneGUI(SceneView sceneView)
+    private void OnScene(SceneView sceneView)
     {
         if (_selectedIndex < 0) // 오류 방어
             return;
@@ -336,6 +336,8 @@ public class StageCustomEditor : Editor
         }
         // 선택한 오브젝트 위에 ID와 타입 라벨 표시
         Handles.Label(position + Vector3.up * 1.2f, $"ID:{idProp.intValue} / {(ObjectType)typeProp.enumValueIndex}"); 
+
+        DrawScreenCenterCrosshair(); 
     }
 
     /// <summary>
@@ -505,6 +507,31 @@ public class StageCustomEditor : Editor
         {
             behaviour.enabled = false;
         }
+    }
+
+    /// <summary>
+    /// 씬 정중앙에 십자선 그리기 (새 오브젝트 생성 위치 표시용)
+    /// </summary>
+    private void DrawScreenCenterCrosshair()
+    {
+        Handles.BeginGUI();
+
+        Vector2 center = new Vector2(
+            SceneView.currentDrawingSceneView.position.width / 2,
+            SceneView.currentDrawingSceneView.position.height / 2
+        );
+        float size = 10f;
+        Color prev = GUI.color;
+        GUI.color = Color.green;
+
+        // 가로
+        GUI.DrawTexture(new Rect(center.x - size, center.y, size * 2, 1), Texture2D.whiteTexture);
+        // 세로
+        GUI.DrawTexture(new Rect(center.x, center.y - size, 1, size * 2), Texture2D.whiteTexture);
+        GUI.color = prev;
+        Handles.EndGUI();
+
+        Handles.Label(center + Vector2.up * size, $"({center.x:F2}, {center.y:F2})");
     }
 
 }

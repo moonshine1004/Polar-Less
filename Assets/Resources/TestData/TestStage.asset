@@ -12,18 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b17b4cc308c541e88c6dcb085c30b3c, type: 3}
   m_Name: TestStage
   m_EditorClassIdentifier: Assembly-CSharp::GameStageDataSO
-  stageID: 1
+  stageID: 0
   levelID: 1
   objectData:
   - objectType: 0
     ID: 1
-    position: {x: -5.9416227, y: 2.8095968, z: -1.1055839}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-  - objectType: 1
-    ID: 2
-    position: {x: 6.3384333, y: 0.62794626, z: -1.1055839}
+    position: {x: -0.0041475296, y: 3.5631466, z: -1.1397051}
     rotation: {x: 0, y: 0, z: 0, w: 1}
   - objectType: 0
+    ID: 2
+    position: {x: 3.6412535, y: -1.768606, z: -1.1397051}
+    rotation: {x: 0, y: 0, z: 0.43406612, w: 0.9008811}
+  - objectType: 1
     ID: 3
-    position: {x: 1.7757906, y: 1.8584514, z: -1.1414158}
-    rotation: {x: 0, y: 0, z: -0.29882517, w: 0.95430785}
+    position: {x: 5.4019566, y: 1.7032301, z: -1.1397051}
+    rotation: {x: 0, y: 0, z: -0.34199673, w: 0.93970114}
+  - objectType: 1
+    ID: 4
+    position: {x: -2.7816546, y: -2.140587, z: -1.1397051}
+    rotation: {x: 0, y: 0, z: 0.41054535, w: 0.91184014}
+  - objectType: 0
+    ID: 5
+    position: {x: -5.7575183, y: 1.7528292, z: -1.1397051}
+    rotation: {x: 0, y: 0, z: -0.45861706, w: 0.888634}
+  - objectType: 0
+    ID: 6
+    position: {x: 7.534646, y: -4.546075, z: -1.1397051}
+    rotation: {x: 0, y: 0, z: 0.29620272, w: 0.9551251}

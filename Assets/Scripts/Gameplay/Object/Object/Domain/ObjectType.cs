@@ -4,6 +4,7 @@ public enum ObjectType
     Slide,
     Static,
     Obstacle,
+    SubGoal,
     Goal
 }
 
