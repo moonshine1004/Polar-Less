@@ -4,7 +4,6 @@ using UnityEngine;
 public class GoalView : MonoBehaviour, IGetObjectType
 {
     [SerializeField] private IGameStageServices _gameStageServices;
-
     public void Install(IGameStageServices gameStageServices)
     {
         _gameStageServices = gameStageServices;
@@ -18,12 +17,5 @@ public class GoalView : MonoBehaviour, IGetObjectType
         return ObjectType.Goal;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.GetComponent<LightView>() != null)
-        {
-            _gameStageServices.ClearGameStage();
-            Debug.Log("Goal Reached!");
-        }
-    }
+
 }

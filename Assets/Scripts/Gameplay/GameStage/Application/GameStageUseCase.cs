@@ -39,7 +39,6 @@ public class ClearStageUseCase : IClearStageUseCase
 {
     public void Execute(IRegistMirror mirrorRegistry, IObjectPool<MirrorView> mirrorPool)
     {
-        Debug.Log("Clearing Game Stage...");
         var activedMirrorList = mirrorRegistry.GetActivedMirrorList();
         foreach (MirrorView mirror in activedMirrorList)
         {

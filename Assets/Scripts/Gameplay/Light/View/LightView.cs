@@ -7,10 +7,12 @@ public class LightView : MonoBehaviour
     [SerializeField] private LightMesh _lightMesh;
 
     private LightDomain _lightDomain;
+    private IGameStageServices _gameStageServices;
 
-    public void InstallLightView(LightDomain lightDomain, LightServices lightServices)
+    public void InstallLightView(LightDomain lightDomain, IGameStageServices gameStageServices)
     {
         _lightDomain = lightDomain;
+        _gameStageServices = gameStageServices;
     }
 
     private void Update()
@@ -40,7 +42,7 @@ public class LightView : MonoBehaviour
         else if (objectType == ObjectType.Goal)
         {
             _lightDomain.LightPath.Add(hit.point);
-            Debug.Log("Goal Reached!");
+            _gameStageServices.ClearGameStage();
         }
         else
         {

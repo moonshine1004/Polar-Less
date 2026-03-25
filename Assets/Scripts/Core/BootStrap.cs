@@ -50,7 +50,7 @@ public class BootStrap : MonoBehaviour
 
         #region Views
             // lightView
-            _lightView.InstallLightView(lightDomain, lightServices);
+            _lightView.InstallLightView(lightDomain, gameStageServices);
             // mittotrView
             // goalView
             _goalView.Install(gameStageServices);
