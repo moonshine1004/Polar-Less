@@ -13,9 +13,5 @@ public struct MirrorData
     public Quaternion Rotation { get; set; }
 }
 
-public class MirrorDomain
-{
-    public MirrorType MirrorType { get; set; }
-    public int MirrorID { get; set; }
-}
+
 
