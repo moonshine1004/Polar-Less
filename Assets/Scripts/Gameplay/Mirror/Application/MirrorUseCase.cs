@@ -18,7 +18,7 @@ public class MirrorInstallUseCase // 풀에서 꺼낼 때
     public MirrorDomain Excute()
     {
         var mirrorDomain = new MirrorDomain();
-        mirrorDomain.MirrorType = MirrorType.Rotate;
+        mirrorDomain.MirrorType = ObjectType.Rotate;
         mirrorDomain.MirrorID = 0;
         return mirrorDomain;
     }

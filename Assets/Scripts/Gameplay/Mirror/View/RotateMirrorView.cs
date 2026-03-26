@@ -15,7 +15,7 @@ public sealed class RotateMirrorView : MirrorBaseView
         gameObject.layer = 6;
         _mirrorDomain = new MirrorDomain()
         {
-            MirrorType = MirrorType.Rotate,
+            MirrorType = ObjectType.Rotate,
             MirrorID = 1,
         };
         _collider = GetComponent<Collider2D>();
