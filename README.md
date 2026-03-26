@@ -2,8 +2,8 @@
 > 본 프로젝트는 2026학년도 1학기 광운대학교 게임종합동아리에서 진행한 프로젝트 게임으로, 빛의 입사/반사를 이용해 빛을 목표 지점까지 도달시키는 퍼즐 게임입니다. 
 ![Example GIF]()
 ## Links
-- [[기획/기술 문서 & 아트 에셋 Google Drive]]("")
-- [[개발 일정표]]("")
+- [[기획/기술 문서 & 아트 에셋 Google Drive]]("https://drive.google.com/drive/folders/19KnFjmr55tBnQA4sDTWhPLQbADn3SrpX")
+- [[개발 일정표]]("https://docs.google.com/spreadsheets/d/13U3A6tnWeJETY449GSzQN1v2WFgqNV6fHpt-UPKcKvY/edit?gid=1651898734#gid=1651898734")
 
 ## Project Info
 - **게임**: Polar-Less
@@ -75,58 +75,48 @@ sequenceDiagram
 ``` mermaid
 classDiagram
     class MirrorView {
+        -_mirrorDomain: MirrorDomain
+        -_moveStrategy: IMirrorMoveStrategy
         +Install(domain, strategy, sprite)
-        +SetSprite(sprite)
-        +RefreshCollider()
-        +Release()
+
     }
 
     class MirrorDomain {
-        +MirrorId
-        +Position
-        +Angle
-        +IsLocked
-        +IsControlling
+        +MirrorType: ObjectType
+        +MirrorID: int
+        +Position: Vector3
+        +Rotation: Quaternion
     }
 
-    class IMirrorControlStrategy {
+    class IMirrorMoveStrategy {
         <<interface>>
-        +OnPointerDown()
-        +OnDrag()
-        +OnPointerUp()
+        +Move(Transform transform, Vector2 touchedPosition)
     }
 
     class RotateControlStrategy
     class DragMoveControlStrategy
-    class NoControlStrategy
+
 
     class MirrorFactory {
         +Create(spawnData) MirrorView
         +Release(view)
     }
 
-    class MirrorPool {
+    class IObjectPool {
+        <<interface>>
         +Get() MirrorView
-        +Release(view)
+        +Return(MirrorView)
     }
 
-    class MirrorControlLockService {
-        +TryLock(id) bool
-        +Unlock(id)
-    }
-
-    MirrorFactory --> MirrorPool
+    MirrorFactory --> IObjectPool
     MirrorFactory --> MirrorDomain
-    MirrorFactory --> IMirrorControlStrategy
     MirrorFactory --> MirrorView
 
     MirrorView --> MirrorDomain
-    MirrorView --> IMirrorControlStrategy
-    MirrorView --> MirrorControlLockService
+    MirrorView --> IMirrorMoveStrategy
 
-    IMirrorControlStrategy <|.. RotateControlStrategy
-    IMirrorControlStrategy <|.. DragMoveControlStrategy
-    IMirrorControlStrategy <|.. NoControlStrategy
+    IMirrorMoveStrategy <|.. RotateControlStrategy
+    IMirrorMoveStrategy <|.. DragMoveControlStrategy
 ```
 
 ## 기술적 포인트 & 문제해결
