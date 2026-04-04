@@ -39,11 +39,11 @@ public class ClearStageUseCase : IClearStageUseCase
 {
     public void Execute(IRegistMirror mirrorRegistry, IObjectPool<MirrorView> mirrorPool)
     {
-        var activedMirrorList = mirrorRegistry.GetActivedMirrorList();
-        foreach (MirrorView mirror in activedMirrorList)
-        {
-            mirrorPool.Return(mirror);
-        }
-        activedMirrorList.Clear();
+        // var activedMirrorList = mirrorRegistry.GetActivedMirrorList();
+        // foreach (MirrorView mirror in activedMirrorList)
+        // {
+        //     mirrorPool.Return(mirror);
+        // }
+        // activedMirrorList.Clear();
     }
 }
